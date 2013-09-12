@@ -7,8 +7,8 @@ import requests
 import time
 
 # States
-FINISHED = "finished"
-PENDING = "pending"
+FINISHED = ["finished"]
+PENDING = ["created", "started"]
 
 SUCCESS = 0
 FAIL = 1
@@ -59,14 +59,14 @@ class MrTravisCIHead(MrContinuousIntegrationHead):
 			committer_email = build_result['committer_email']
 			committer_name = build_result['committer_name']
 			message = build_result['message']
-
-			if build_result['state'] == PENDING:
+			print build_result
+			if build_result['state'] in PENDING:
 				# Currently running
-				self.running(commiter_name, message)
+				self.running(committer_name, message)
 			elif build_result['result'] == SUCCESS:
-				self.success(commiter_name, message)
+				self.success(committer_name, message)
 			else:
-				self.failure(commiter_name, message)
+				self.failure(committer_name, message)
 
 if __name__ == "__main__":
 	MrTravisCIHead("jscott1989/mrcontinuousintegrationhead").main()
