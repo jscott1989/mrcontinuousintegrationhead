@@ -5,15 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Bootstrap -->
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
-	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-theme.min.css">
+  	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-theme.min.css">
+    <style>
+      ul.log {
+        height: 200px;
+        overflow: scroll;
+      }
+    </style>
   </head>
   <body>
     <div class="container">
       <h1>{{name}}</h1>
       <h2>Log</h2>
-      <ul data-bind="foreach: ordered_log">
+      <ul class="log" data-bind="foreach: ordered_log">
         <li data-bind="text: $data"></li>
       </ul>
+      <form action="/clear_log" method="POST" class="ajax">
+        <button type="submit">Clear Log</button>
+      </form>
       <h2>Status</h2>
       <table data-bind="foreach: status">
         <tr>
@@ -57,6 +66,10 @@
       var channel = pusher.subscribe('{{name}}');
       channel.bind('log', function(data) {
         viewmodel.log.push(data.logstring);
+      });
+
+      channel.bind('clear-log', function() {
+        viewmodel.log.removeAll();
       });
 
       channel.bind('change-status', function(data) {

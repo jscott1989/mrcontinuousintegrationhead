@@ -14,6 +14,5 @@ class BuildSystem(object):
 	def run(self):
 		self.setup()
 		while True:
-			self.log("Polling")
 			self.poll()
 			time.sleep(self.timeout)

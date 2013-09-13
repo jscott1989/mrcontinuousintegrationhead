@@ -15,7 +15,6 @@ class TravisCI(BuildSystem):
 		super(TravisCI, self).__init__(*args, **kwargs)
 
 	def setup(self):
-		print "Setting up"
 		result = requests.get("https://travis-ci.org/%s" % self.project).json()
 		self.set_status('tci_last_build_id', result['last_build_id'])
 		build_result = requests.get('https://travis-ci.org/builds/%s' % self.status['tci_last_build_id']).json()

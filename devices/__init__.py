@@ -3,6 +3,8 @@ import thread
 from datetime import datetime
 import pusher
 
+from pi import gpio
+
 class Device(object):
 	test_functions = []
 	logs = []
@@ -11,7 +13,6 @@ class Device(object):
 	def set_status(self, key, value):
 		self.status[key] = value
 		self.pusher[self.name].trigger('change-status', {'key': key, 'value': value})
-		print self.status
 
 	def log(self, message):
 		time = datetime.now().strftime('%d-%m-%y %H:%M')
@@ -40,6 +41,7 @@ class Device(object):
 	def setup_webserver(self):
 		bottle.route('/')(bottle.view('index')(self.index))
 
+		bottle.post('/clear_log')(self.clear_log)
 		bottle.post('/function/<function_id>')(self.function)
 		bottle.run(host='0.0.0.0', port=8080)
 
@@ -58,6 +60,11 @@ class Device(object):
 		}
 
 		return dict(viewmodel=viewmodel, name=self.name, test_functions=[[i, f[0]] for i, f in enumerate(self.test_functions)])
+
+	def clear_log(self):
+		self.logs = []
+		open('log.txt', 'w').close()
+		self.pusher[self.name].trigger('clear-log')
 
 	def function(self, function_id):
 		self.test_functions[int(function_id)][1]()
