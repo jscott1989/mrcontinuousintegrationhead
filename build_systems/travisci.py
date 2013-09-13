@@ -13,14 +13,14 @@ class TravisCI(BuildSystem):
 	last_build_id = 0
 	last_state = ''
 
-	def __init__(self, timeout, project):
-		self.project = project
+	def __init__(self, *args, **kwargs):
+		self.project = kwargs.pop('project')
 		result = requests.get("https://travis-ci.org/%s" % self.project).json()
 		self.last_build_id = result['last_build_id']
 		build_result = requests.get('https://travis-ci.org/builds/%s' % self.last_build_id).json()
 		self.last_state = build_result['state']
 
-		super(TravisCI, self).__init__(timeout)
+		super(TravisCI, self).__init__(*args, **kwargs)
 
 	def poll(self):
 		result = requests.get("https://travis-ci.org/%s" % self.project).json()

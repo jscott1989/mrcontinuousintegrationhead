@@ -1,4 +1,12 @@
-class MrContinuousIntegrationHead(object):
+from . import Outlet
+
+from pi import gpio
+
+class MrContinuousIntegrationHead(Outlet):
+	def map_gpio(self):
+		pass
+		# gpio.map()
+
 	def success(self, committer_name, message):
 		print "Success %s (%s)" % (committer_name, message)
 

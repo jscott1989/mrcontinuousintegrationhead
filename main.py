@@ -11,4 +11,4 @@ if __name__ == "__main__":
 	class MrTravisCIHead(TravisCI, MrContinuousIntegrationHead):
 		pass
 
-	MrTravisCIHead(TIMEOUT, "jscott1989/mrcontinuousintegrationhead").run()
+	MrTravisCIHead(timeout=TIMEOUT, project="jscott1989/mrcontinuousintegrationhead").run()
