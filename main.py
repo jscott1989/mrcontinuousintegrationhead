@@ -6,13 +6,6 @@
 import requests
 import time
 
-# States
-FINISHED = ["finished"]
-PENDING = ["created", "started"]
-
-SUCCESS = 0
-FAIL = 1
-
 TIMEOUT = 10
 
 class MrContinuousIntegrationHead(object):
@@ -35,6 +28,14 @@ class MrContinuousIntegrationHead(object):
 		print "Running %s (%s)" % (committer_name, message)
 
 class MrTravisCIHead(MrContinuousIntegrationHead):
+	# States
+	FINISHED = ["finished"]
+	PENDING = ["created", "started"]
+
+	# Results
+	SUCCESS = 0
+	FAIL = 1
+
 	last_build_id = 0
 	last_state = ''
 
@@ -60,10 +61,10 @@ class MrTravisCIHead(MrContinuousIntegrationHead):
 			committer_name = build_result['committer_name']
 			message = build_result['message']
 			print build_result
-			if build_result['state'] in PENDING:
+			if build_result['state'] in self.PENDING:
 				# Currently running
 				self.running(committer_name, message)
-			elif build_result['result'] == SUCCESS:
+			elif build_result['result'] == self.SUCCESS:
 				self.success(committer_name, message)
 			else:
 				self.failure(committer_name, message)
