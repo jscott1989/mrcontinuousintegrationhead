@@ -7,12 +7,6 @@ COLOUR_RED = "red"
 COLOUR_BLUE = "blue"
 COLOUR_GREEN = "green"
 
-RED_CHANNEL = 1
-GREEN_CHANNEL = 2
-BLUE_CHANNEL = 3
-
-COLOUR_CHANNELS = {COLOUR_RED: RED_CHANNEL, COLOUR_GREEN: GREEN_CHANNEL, COLOUR_BLUE: BLUE_CHANNEL}
-
 class ContinuousIntegrationIsMagic(Device):
 	name = "ContinuousIntegrationIsMagic"
 
@@ -24,6 +18,10 @@ class ContinuousIntegrationIsMagic(Device):
 		self.status['channel_1'] = 0
 		self.status['channel_2'] = 0
 		self.status['channel_3'] = 0
+
+		self.configuration['red_channel'] = 1
+		self.configuration['green_channel'] = 2
+		self.configuration['blue_channel'] = 3
 
 		self.special_statuses.append('<strong>Latest Picture</strong><br /><img id="pony_picture" style="width:500px" src="/picture.jpg"><script>setInterval(function(){$("#pony_picture").attr("src", "/picture.jpg?t=" + new Date().getTime());}, 6000)</script>')
 
@@ -44,7 +42,7 @@ class ContinuousIntegrationIsMagic(Device):
 
 	def map_gpio(self):
 		pass
-		# gpio.map(gpio.BOARD, {COLOUR_CHANNELS[COLOUR_RED]: gpio.OUT, COLOUR_CHANNELS[COLOUR_GREEN]: gpio.OUT, COLOUR_CHANNELS[COLOUR_BLUE]: gpio.OUT})
+		# gpio.map(gpio.BOARD, {self.configuration['red_channel']: gpio.OUT, self.configuration['green_channel']: gpio.OUT, self.configuration['blue_channel']: gpio.OUT})
 
 	def success(self, committer_name, message):
 		print "Success %s (%s)" % (committer_name, message)
@@ -68,12 +66,12 @@ class ContinuousIntegrationIsMagic(Device):
 	def turnEyeOn(self, colour):
 		self.log("Turning %s light on" % colour)
 		self.set_status('%s_eye' % colour, 'ON')
-		self.gpio_output(COLOUR_CHANNELS[colour], gpio.HIGH)
+		self.gpio_output(self.configuration[colour + '_channel'], gpio.HIGH)
 
 	def turnEyeOff(self, colour):
 		self.log("Turning %s light off" % colour)
 		self.set_status('%s_eye' % colour, 'OFF')
-		self.gpio_output(COLOUR_CHANNELS[colour], gpio.LOW)
+		self.gpio_output(self.configuration[colour + '_channel'], gpio.LOW)
 
 
 	def webTurnRedEyeOn(self):

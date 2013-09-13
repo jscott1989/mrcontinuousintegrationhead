@@ -8,14 +8,6 @@ COLOUR_RED = "red"
 COLOUR_BLUE = "blue"
 COLOUR_GREEN = "green"
 
-RED_CHANNEL = 1
-GREEN_CHANNEL = 2
-BLUE_CHANNEL = 3
-
-COLOUR_CHANNELS = {COLOUR_RED: RED_CHANNEL, COLOUR_GREEN: GREEN_CHANNEL, COLOUR_BLUE: BLUE_CHANNEL}
-
-SERVO_BASE_ID = 0
-
 class ServoShaker(threading.Thread):
 	def __init__(self, device):
 		self.device = device
@@ -30,7 +22,7 @@ class ServoShaker(threading.Thread):
 				position = 60
 			else:
 				position = 240
-			self.device.set_servo_position(SERVO_BASE_ID, position)
+			self.device.set_servo_position(self.device.configuration['servo_base_id'], position)
 			time.sleep(0.5)
 
 	def stop(self):
@@ -51,6 +43,11 @@ class MrContinuousIntegrationHead(Device):
 		self.status['channel_1'] = 0
 		self.status['channel_2'] = 0
 		self.status['channel_3'] = 0
+
+		self.configuration['red_channel'] = 1
+		self.configuration['green_channel'] = 2
+		self.configuration['blue_channel'] = 3
+		self.configuration['servo_base_id'] = 0
 
 		super(MrContinuousIntegrationHead, self).__init__(*args, **kwargs)
 	
@@ -106,12 +103,12 @@ class MrContinuousIntegrationHead(Device):
 	def turnEyeOn(self, colour):
 		self.log("Turning %s light on" % colour)
 		self.set_status('%s_eye' % colour, 'ON')
-		self.gpio_output(COLOUR_CHANNELS[colour], gpio.HIGH)
+		self.gpio_output(self.configuration[colour + '_channel'], gpio.HIGH)
 
 	def turnEyeOff(self, colour):
 		self.log("Turning %s light off" % colour)
 		self.set_status('%s_eye' % colour, 'OFF')
-		self.gpio_output(COLOUR_CHANNELS[colour], gpio.LOW)
+		self.gpio_output(self.configuration[colour + '_channel'], gpio.LOW)
 
 
 	def webTurnRedEyeOn(self):
@@ -133,10 +130,10 @@ class MrContinuousIntegrationHead(Device):
 		self.turnEyeOff(COLOUR_BLUE)
 
 	def webSetBasePositionMax(self):
-		self.set_servo_position(SERVO_BASE_ID, 240)
+		self.set_servo_position(self.configuration['servo_base_id'], 240)
 
 	def webSetBasePositionMin(self):
-		self.set_servo_position(SERVO_BASE_ID, 60)
+		self.set_servo_position(self.configuration['servo_base_id'], 60)
 
 	def webStartShaking(self):
 		self.start_shaking()

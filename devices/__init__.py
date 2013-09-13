@@ -14,11 +14,11 @@ class Device(object):
 	logs = []
 	status = OrderedDict()
 	special_statuses = [] # These are just HTML strings which will be injected below the status area
-	configuration = {}
+	configuration = OrderedDict()
 
 	def load_configuration(self):
 		try:
-			self.configuration = dict(self.configuration.items() + yaml.load(open('config.yml').read()).items())
+			self.configuration = OrderedDict(self.configuration.items() + yaml.load(open('config.yml').read()).items())
 		except IOError:
 			pass # Config file not set yet - will use defaults
 
@@ -84,7 +84,7 @@ class Device(object):
 		return bottle.redirect('/')
 
 	def config(self):
-		self.configuration = dict(self.configuration.items() + bottle.request.forms.items())
+		self.configuration = OrderedDict(self.configuration.items() + bottle.request.forms.items())
 		with open('config.yml', 'w') as outfile:
 			outfile.write(yaml.dump(self.configuration, default_flow_style=True))
 
