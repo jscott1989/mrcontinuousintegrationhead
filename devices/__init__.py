@@ -7,12 +7,13 @@ import sys
 import yaml
 from collections import OrderedDict
 
-from pi import gpio
+from pi import gpio, servo, sound, camera
 
 class Device(object):
 	test_functions = []
 	logs = []
 	status = OrderedDict()
+	special_statuses = [] # These are just HTML strings which will be injected below the status area
 	configuration = {}
 
 	def load_configuration(self):
@@ -71,7 +72,7 @@ class Device(object):
 			"status": [{"key": k, "value": v} for k, v in self.status.items()],
 		}
 
-		return dict(configuration=self.configuration, viewmodel=viewmodel, name=self.name, test_functions=[[i, f[0]] for i, f in enumerate(self.test_functions)])
+		return dict(special_statuses=self.special_statuses, configuration=self.configuration, viewmodel=viewmodel, name=self.name, test_functions=[[i, f[0]] for i, f in enumerate(self.test_functions)])
 
 	def clear_log(self):
 		self.logs = []
@@ -91,3 +92,20 @@ class Device(object):
 		gpio.output(channel, value)
 		self.set_status('channel_%s' % channel, value)
 		self.log("Setting channel %s to %s" % (channel, value))
+
+	def set_servo_position(self, servo_id, position):
+		self.log("Setting servo position to %d" % position)
+		self.set_status('servo_%d_position' % servo_id, position)
+		servo.set_position(0, position)
+
+	def speak(self, message, pitch):
+		self.log("Saying '%s' at pitch %d" % (message, pitch))
+		sound.speak(message, pitch)
+
+	def play(self, f):
+		self.log("Playing '%s'" % f)
+		sound.play(f)
+
+	def take_picture(self):
+		self.log("Taking picture")
+		camera.take_picture()

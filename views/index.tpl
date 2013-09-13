@@ -56,6 +56,9 @@
               <td><strong data-bind="text: key"></strong></td>
               <td data-bind="text: value"></td>
           </table>
+          % for special_status in special_statuses:
+          {{!special_status}}
+          % end
         </div>
       </div>
 

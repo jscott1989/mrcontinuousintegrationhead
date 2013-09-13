@@ -93,11 +93,6 @@ class MrContinuousIntegrationHead(Device):
 			self.shaking.stop()
 			self.shaking = None
 
-	def set_servo_position(self, servo_id, position):
-		self.log("Setting servo position to %d" % position)
-		self.set_status('servo_%d_position' % servo_id, position)
-		servo.set_position(0, position)
-
 	def turnEyesOn(self):
 		self.turnEyeOn(COLOUR_RED)
 		self.turnEyeOn(COLOUR_GREEN)

@@ -1,6 +1,7 @@
 from . import Device
 
 from pi import gpio
+import bottle
 
 COLOUR_RED = "red"
 COLOUR_BLUE = "blue"
@@ -24,6 +25,10 @@ class ContinuousIntegrationIsMagic(Device):
 		self.status['channel_2'] = 0
 		self.status['channel_3'] = 0
 
+		self.special_statuses.append('<strong>Latest Picture</strong><br /><img id="pony_picture" style="width:500px" src="/picture.jpg"><script>setInterval(function(){$("#pony_picture").attr("src", "/picture.jpg?t=" + new Date().getTime());}, 6000)</script>')
+
+		bottle.route('/picture.jpg')(self.host_picture)
+
 		super(ContinuousIntegrationIsMagic, self).__init__(*args, **kwargs)
 
 	def register_website_functions(self, *args, **kwargs):
@@ -33,6 +38,9 @@ class ContinuousIntegrationIsMagic(Device):
 		self.register_test_function('Turn Green Eye Off', self.webTurnGreenEyeOff)
 		self.register_test_function('Turn Blue Eye On', self.webTurnBlueEyeOn)
 		self.register_test_function('Turn Blue Eye Off', self.webTurnBlueEyeOff)
+
+	def host_picture(self):
+		return bottle.static_file('picture.jpg', root='picture')
 
 	def map_gpio(self):
 		pass
