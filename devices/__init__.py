@@ -4,6 +4,7 @@ from datetime import datetime
 import pusher
 import os
 import sys
+import yaml
 
 from pi import gpio
 
@@ -11,6 +12,13 @@ class Device(object):
 	test_functions = []
 	logs = []
 	status = {}
+	configuration = {}
+
+	def load_configuration(self):
+		try:
+			self.configuration = dict(self.configuration.items() + yaml.load(open('config.yml').read()).items())
+		except IOError:
+			pass # Config file not set yet - will use defaults
 
 	def set_status(self, key, value):
 		self.status[key] = value
@@ -44,7 +52,7 @@ class Device(object):
 		bottle.route('/')(bottle.view('index')(self.index))
 
 		bottle.post('/clear_log')(self.clear_log)
-		bottle.post('/restart')(self.restart)
+		bottle.post('/config')(self.config)
 		bottle.post('/function/<function_id>')(self.function)
 		bottle.run(host='0.0.0.0', port=8080)
 
@@ -62,7 +70,7 @@ class Device(object):
 			"status": [{"key": k, "value": v} for k, v in self.status.items()],
 		}
 
-		return dict(viewmodel=viewmodel, name=self.name, test_functions=[[i, f[0]] for i, f in enumerate(self.test_functions)])
+		return dict(configuration=self.configuration, viewmodel=viewmodel, name=self.name, test_functions=[[i, f[0]] for i, f in enumerate(self.test_functions)])
 
 	def clear_log(self):
 		self.logs = []
@@ -73,10 +81,12 @@ class Device(object):
 		self.test_functions[int(function_id)][1]()
 		return bottle.redirect('/')
 
-	def restart(self):
-		os.execl(sys.executable, *([sys.executable]+sys.argv+['restart']))
-		sys.exit(0)
+	def config(self):
+		self.configuration = dict(self.configuration.items() + bottle.request.forms.items())
+		with open('config.yml', 'w') as outfile:
+			outfile.write(yaml.dump(self.configuration, default_flow_style=True))
 
 	def gpio_output(self, channel, value):
 		gpio.output(channel, value)
 		self.set_status('channel_%s' % channel, value)
+		self.log("Setting channel %s to %s" % (channel, value))

@@ -10,18 +10,18 @@ class TravisCI(BuildSystem):
 	SUCCESS = 0
 	FAIL = 1
 
-	def __init__(self, *args, **kwargs):
-		self.project = kwargs.pop('project')
-		super(TravisCI, self).__init__(*args, **kwargs)
-
 	def setup(self):
-		result = requests.get("https://travis-ci.org/%s" % self.project).json()
+		self.configuration['timeout'] = 10
+		self.configuration['project'] = 'jscott1989/mrcontinuousintegrationhead'
+		self.load_configuration()
+
+		result = requests.get("https://travis-ci.org/%s" % self.configuration['project']).json()
 		self.set_status('tci_last_build_id', result['last_build_id'])
 		build_result = requests.get('https://travis-ci.org/builds/%s' % self.status['tci_last_build_id']).json()
 		self.set_status('tci_state', build_result['state'])
 
 	def poll(self):
-		result = requests.get("https://travis-ci.org/%s" % self.project).json()
+		result = requests.get("https://travis-ci.org/%s" % self.configuration['project']).json()
 		build_id = result['last_build_id']
 		build_result = requests.get('https://travis-ci.org/builds/%s' % build_id).json()
 		state = build_result['state']
@@ -37,11 +37,14 @@ class TravisCI(BuildSystem):
 			message = build_result['message']
 			if build_result['state'] in self.PENDING:
 				# Currently running
+				self.log('Entering pending state')
 				self.set_status('state', 'PENDING')
 				self.running(committer_name, message)
 			elif build_result['result'] == self.SUCCESS:
+				self.log('Entering success state')
 				self.set_status('state', 'SUCCESS')
 				self.success(committer_name, message)
 			else:
+				self.log('Entering failure state')
 				self.set_status('state', 'FAILURE')
 				self.failure(committer_name, message)

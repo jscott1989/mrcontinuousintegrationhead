@@ -4,12 +4,17 @@
     <title>{{name}} Status</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Bootstrap -->
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
-  	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
+  	<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-theme.min.css">
     <style>
       ul.log {
         height: 200px;
         overflow: scroll;
+      }
+
+      .test-form button {
+        margin-top: 10px;
+        width: 150px;
       }
     </style>
   </head>
@@ -19,13 +24,21 @@
       <div class="row">
         <div class="col-md-6">
           <h2>Configuration</h2>
-          <form action="/restart" method="POST" class="ajax">
-            <button type="submit">Restart</button>
+          <form action="/config" method="POST" role="form" class="ajax form-horizontal">
+            % for key, value in configuration.items():
+              <div class="form-group">
+                <label class="col-lg-2 control-label" for="{{key}}">{{key}}</label>
+                <div class="col-lg-10">
+                  <input type="text" name="{{key}}" value="{{value}}">
+                </div>
+              </div>
+            % end
+            <button class="btn btn-default" type="submit">Save changes</button>
           </form>
           <h2>Testing</h2>
           % for id, function in test_functions:
-          <form action="/function/{{id}}" method="POST" class="ajax">
-            <button type="submit">{{function}}</button>
+          <form action="/function/{{id}}" method="POST" class="ajax test-form">
+            <button class="btn btn-default" type="submit">{{function}}</button>
           </form>
           % end
         </div>
@@ -35,7 +48,7 @@
             <li data-bind="text: $data"></li>
           </ul>
           <form action="/clear_log" method="POST" class="ajax">
-            <button type="submit">Clear Log</button>
+            <button class="btn btn-default" type="submit">Clear Log</button>
           </form>
           <h2>Status</h2>
           <table data-bind="foreach: status">
@@ -47,12 +60,12 @@
       </div>
 
     </div>
-    <script src="//code.jquery.com/jquery.js"></script>
-    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+    <script src="http://code.jquery.com/jquery.js"></script>
+    <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/knockout/2.3.0/knockout-min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/knockout.mapping/2.3.5/knockout.mapping.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/knockout.mapping/2.3.5/knockout.mapping.js"></script>
     <script src="http://js.pusher.com/2.1/pusher.min.js" type="text/javascript"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
     <script>
 
       // Viewmodel stuff

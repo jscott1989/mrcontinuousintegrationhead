@@ -36,3 +36,4 @@ nosetests.xml
 
 /ve/
 /log.txt
+/config.yml
