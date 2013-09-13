@@ -3,6 +3,8 @@ from . import Device
 from pi import gpio
 
 class MrContinuousIntegrationHead(Device):
+	name = "MrContinuousIntegrationHead"
+	
 	def map_gpio(self):
 		pass
 		# gpio.map()

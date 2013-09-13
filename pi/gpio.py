@@ -1,7 +1,7 @@
 try:
 	from RPi import GPIO
 
-	from GPIO import IN, OUT, BOARD, BCM, HIGH, LOW, output
+	from GPIO import IN, OUT, BOARD, BCM, HIGH, LOW, output, cleanup
 
 	def map(mode, channels):
 		GPIO.setmode(mode)
@@ -26,3 +26,12 @@ except ImportError:
 
 	def output(channel, value):
 		_channels[channel]["value"] = value
+
+	def cleanup():
+		pass
+
+def _cleanup():
+	''' Release pins on exit '''
+	cleanup()
+import atexit
+atexit.register(_cleanup)
