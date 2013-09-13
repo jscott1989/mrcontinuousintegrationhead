@@ -2,6 +2,8 @@ import bottle
 import thread
 from datetime import datetime
 import pusher
+import os
+import sys
 
 from pi import gpio
 
@@ -42,6 +44,7 @@ class Device(object):
 		bottle.route('/')(bottle.view('index')(self.index))
 
 		bottle.post('/clear_log')(self.clear_log)
+		bottle.post('/restart')(self.restart)
 		bottle.post('/function/<function_id>')(self.function)
 		bottle.run(host='0.0.0.0', port=8080)
 
@@ -69,3 +72,11 @@ class Device(object):
 	def function(self, function_id):
 		self.test_functions[int(function_id)][1]()
 		return bottle.redirect('/')
+
+	def restart(self):
+		os.execl(sys.executable, *([sys.executable]+sys.argv+['restart']))
+		sys.exit(0)
+
+	def gpio_output(self, channel, value):
+		gpio.output(channel, value)
+		self.set_status('channel_%s' % channel, value)

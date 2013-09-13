@@ -49,12 +49,12 @@ class ContinuousIntegrationIsMagic(Device):
 	def turnEyeOn(self, colour):
 		self.log("Turning %s light on" % colour)
 		self.set_status('%s_eye' % colour, 'ON')
-		gpio.output(COLOUR_CHANNELS[colour], gpio.HIGH)
+		self.gpio_output(COLOUR_CHANNELS[colour], gpio.HIGH)
 
 	def turnEyeOff(self, colour):
 		self.log("Turning %s light off" % colour)
 		self.set_status('%s_eye' % colour, 'OFF')
-		gpio.output(COLOUR_CHANNELS[colour], gpio.LOW)
+		self.gpio_output(COLOUR_CHANNELS[colour], gpio.LOW)
 
 
 	def webTurnRedEyeOn(self):

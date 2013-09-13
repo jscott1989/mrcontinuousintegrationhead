@@ -16,28 +16,35 @@
   <body>
     <div class="container">
       <h1>{{name}}</h1>
-      <h2>Log</h2>
-      <ul class="log" data-bind="foreach: ordered_log">
-        <li data-bind="text: $data"></li>
-      </ul>
-      <form action="/clear_log" method="POST" class="ajax">
-        <button type="submit">Clear Log</button>
-      </form>
-      <h2>Status</h2>
-      <table data-bind="foreach: status">
-        <tr>
-          <td><strong data-bind="text: key"></strong></td>
-          <td data-bind="text: value"></td>
-      </table>
-
-      <h2>Configuration</h2>
-
-      <h2>Testing</h2>
-      % for id, function in test_functions:
-      <form action="/function/{{id}}" method="POST" class="ajax">
-        <button type="submit">{{function}}</button>
-      </form>
-      % end
+      <div class="row">
+        <div class="col-md-6">
+          <h2>Configuration</h2>
+          <form action="/restart" method="POST" class="ajax">
+            <button type="submit">Restart</button>
+          </form>
+          <h2>Testing</h2>
+          % for id, function in test_functions:
+          <form action="/function/{{id}}" method="POST" class="ajax">
+            <button type="submit">{{function}}</button>
+          </form>
+          % end
+        </div>
+        <div class="col-md-6">
+          <h2>Log</h2>
+          <ul class="log" data-bind="foreach: ordered_log">
+            <li data-bind="text: $data"></li>
+          </ul>
+          <form action="/clear_log" method="POST" class="ajax">
+            <button type="submit">Clear Log</button>
+          </form>
+          <h2>Status</h2>
+          <table data-bind="foreach: status">
+            <tr>
+              <td><strong data-bind="text: key"></strong></td>
+              <td data-bind="text: value"></td>
+          </table>
+        </div>
+      </div>
 
     </div>
     <script src="//code.jquery.com/jquery.js"></script>
