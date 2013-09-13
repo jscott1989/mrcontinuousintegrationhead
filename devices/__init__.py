@@ -46,6 +46,11 @@ class Device(object):
 		  secret='e0ffde2228c53caa1408'
 		)
 		self.map_gpio()
+
+		self.register_test_function('Success', self.webSuccess)
+		self.register_test_function('Pending', self.webPending)
+		self.register_test_function('Failure', self.webFailure)
+
 		self.register_website_functions()
 		thread.start_new_thread(self.setup_webserver, ())
 		super(Device, self).__init__(*args, **kwargs)
@@ -109,3 +114,13 @@ class Device(object):
 	def take_picture(self):
 		self.log("Taking picture")
 		camera.take_picture()
+
+
+	def webSuccess(self):
+		self.success("Test Committer", "Test Message")
+
+	def webPending(self):
+		self.pending("Test Committer", "Test Message")
+
+	def webFailure(self):
+		self.failure("Test Committer", "Test Message")

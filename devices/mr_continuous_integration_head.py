@@ -73,8 +73,8 @@ class MrContinuousIntegrationHead(Device):
 	def failure(self, committer_name, message):
 		print "Failure %s (%s)" % (committer_name, message)
 
-	def running(self, committer_name, message):
-		print "Running %s (%s)" % (committer_name, message)
+	def pending(self, committer_name, message):
+		print "Pending %s (%s)" % (committer_name, message)
 
 	def start_shaking(self):
 		if not self.shaking:

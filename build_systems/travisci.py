@@ -45,7 +45,7 @@ class TravisCI(BuildSystem):
 				# Currently running
 				self.log('Entering pending state')
 				self.set_status('state', 'PENDING')
-				self.running(committer_name, message)
+				self.pending(committer_name, message)
 			elif build_result['result'] == self.SUCCESS:
 				self.log('Entering success state')
 				self.set_status('state', 'SUCCESS')
