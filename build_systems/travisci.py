@@ -38,8 +38,11 @@ class TravisCI(BuildSystem):
 			message = build_result['message']
 			if build_result['state'] in self.PENDING:
 				# Currently running
+				self.set_status('state', 'PENDING')
 				self.running(committer_name, message)
 			elif build_result['result'] == self.SUCCESS:
+				self.set_status('state', 'SUCCESS')
 				self.success(committer_name, message)
 			else:
+				self.set_status('state', 'FAILURE')
 				self.failure(committer_name, message)

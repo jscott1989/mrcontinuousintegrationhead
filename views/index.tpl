@@ -70,7 +70,7 @@
             x.value(data.value);
           });
         } else {
-          viewmodel.status.push(data);
+          viewmodel.status.push({key: ko.observable(data.key), value: ko.observable(data.value)});
         }
       });
 
