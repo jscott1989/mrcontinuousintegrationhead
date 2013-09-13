@@ -15,6 +15,11 @@
         <li data-bind="text: $data"></li>
       </ul>
       <h2>Status</h2>
+      <table data-bind="foreach: status">
+        <tr>
+          <td><strong data-bind="text: key"></strong></td>
+          <td data-bind="text: value"></td>
+      </table>
 
       <h2>Configuration</h2>
 
@@ -52,6 +57,21 @@
       var channel = pusher.subscribe('{{name}}');
       channel.bind('log', function(data) {
         viewmodel.log.push(data.logstring);
+      });
+
+      channel.bind('change-status', function(data) {
+        // Find the correct status and update it
+        var found_status = _.filter(viewmodel.status(), function(x) {
+          return x.key() == data.key;
+        });
+
+        if (found_status.length > 0) {
+          _.each(found_status, function(x) {
+            x.value(data.value);
+          });
+        } else {
+          viewmodel.status.push(data);
+        }
       });
 
       // Make forms ajax

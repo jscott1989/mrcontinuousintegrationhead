@@ -1,11 +1,17 @@
 import bottle
-from multiprocessing import Process
+import thread
 from datetime import datetime
 import pusher
 
 class Device(object):
 	test_functions = []
 	logs = []
+	status = {}
+
+	def set_status(self, key, value):
+		self.status[key] = value
+		self.pusher[self.name].trigger('change-status', {'key': key, 'value': value})
+		print self.status
 
 	def log(self, message):
 		time = datetime.now().strftime('%d-%m-%y %H:%M')
@@ -28,18 +34,14 @@ class Device(object):
 		)
 		self.map_gpio()
 		self.register_website_functions()
-		self.setup_webserver()
+		thread.start_new_thread(self.setup_webserver, ())
 		super(Device, self).__init__(*args, **kwargs)
 
 	def setup_webserver(self):
 		bottle.route('/')(bottle.view('index')(self.index))
 
 		bottle.post('/function/<function_id>')(self.function)
-
-		self.webserver = Process(target=bottle.run, kwargs=dict(host='0.0.0.0', port=8080))
-		self.webserver.daemon = True
-		self.webserver.start()
-		self.webserver.join()
+		bottle.run(host='0.0.0.0', port=8080)
 
 	def register_website_functions(self):
 		''' Override this '''
@@ -51,7 +53,8 @@ class Device(object):
 
 	def index(self):
 		viewmodel = {
-			"log": self.logs
+			"log": self.logs,
+			"status": [{"key": k, "value": v} for k, v in self.status.items()],
 		}
 
 		return dict(viewmodel=viewmodel, name=self.name, test_functions=[[i, f[0]] for i, f in enumerate(self.test_functions)])

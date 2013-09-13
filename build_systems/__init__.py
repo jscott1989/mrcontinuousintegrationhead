@@ -7,8 +7,13 @@ class BuildSystem(object):
 	def __init__(self, *args, **kwargs):
 		self.timeout = kwargs.pop('timeout')
 		super(BuildSystem, self).__init__(*args, **kwargs)
+
+	def setup(self):
+		pass
 	
 	def run(self):
+		self.setup()
 		while True:
+			self.log("Polling")
 			self.poll()
 			time.sleep(self.timeout)
