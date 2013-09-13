@@ -6,6 +6,7 @@ import os
 import sys
 import yaml
 from collections import OrderedDict
+import random
 
 from pi import gpio, servo, sound, camera
 
@@ -13,7 +14,6 @@ class Device(object):
 	test_functions = []
 	logs = []
 	status = OrderedDict()
-	special_statuses = [] # These are just HTML strings which will be injected below the status area
 	configuration = OrderedDict()
 
 	def load_configuration(self):
@@ -77,7 +77,7 @@ class Device(object):
 			"status": [{"key": k, "value": v} for k, v in self.status.items()],
 		}
 
-		return dict(special_statuses=self.special_statuses, configuration=self.configuration, viewmodel=viewmodel, name=self.name, test_functions=[[i, f[0]] for i, f in enumerate(self.test_functions)])
+		return dict(configuration=self.configuration, viewmodel=viewmodel, name=self.name, test_functions=[[i, f[0]] for i, f in enumerate(self.test_functions)])
 
 	def clear_log(self):
 		self.logs = []
@@ -114,6 +114,7 @@ class Device(object):
 	def take_picture(self):
 		self.log("Taking picture")
 		camera.take_picture()
+		self.set_status('latest_picture', '<img id="pony_picture" style="width:500px" src="/picture.jpg?pid=%d">' % random.randint(0, 9999999))
 
 
 	def webSuccess(self):

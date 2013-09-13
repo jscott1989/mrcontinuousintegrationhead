@@ -18,12 +18,11 @@ class ContinuousIntegrationIsMagic(Device):
 		self.status['channel_1'] = 0
 		self.status['channel_2'] = 0
 		self.status['channel_3'] = 0
+		self.status['latest_picture'] = '<img id="pony_picture" style="width:500px" src="/picture.jpg">'
 
 		self.configuration['red_channel'] = 1
 		self.configuration['green_channel'] = 2
 		self.configuration['blue_channel'] = 3
-
-		self.special_statuses.append('<strong>Latest Picture</strong><br /><img id="pony_picture" style="width:500px" src="/picture.jpg"><script>setInterval(function(){$("#pony_picture").attr("src", "/picture.jpg?t=" + new Date().getTime());}, 6000)</script>')
 
 		bottle.route('/picture.jpg')(self.host_picture)
 
