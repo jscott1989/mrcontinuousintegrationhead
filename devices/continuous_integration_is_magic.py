@@ -15,6 +15,17 @@ COLOUR_CHANNELS = {COLOUR_RED: RED_CHANNEL, COLOUR_GREEN: GREEN_CHANNEL, COLOUR_
 class ContinuousIntegrationIsMagic(Device):
 	name = "ContinuousIntegrationIsMagic"
 
+	def __init__(self, *args, **kwargs):
+		# Default statuses
+		self.status['red_eye'] = 'OFF'
+		self.status['green_eye'] = 'OFF'
+		self.status['blue_eye'] = 'OFF'
+		self.status['channel_1'] = 0
+		self.status['channel_2'] = 0
+		self.status['channel_3'] = 0
+
+		super(ContinuousIntegrationIsMagic, self).__init__(*args, **kwargs)
+
 	def register_website_functions(self, *args, **kwargs):
 		self.register_test_function('Turn Red Eye On', self.webTurnRedEyeOn)
 		self.register_test_function('Turn Red Eye Off', self.webTurnRedEyeOff)

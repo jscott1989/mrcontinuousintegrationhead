@@ -40,6 +40,19 @@ class ServoShaker(threading.Thread):
 class MrContinuousIntegrationHead(Device):
 	name = "MrContinuousIntegrationHead"
 	shaking = None # The thread handling the shaking
+
+	def __init__(self, *args, **kwargs):
+		# Default statuses
+		self.status['red_eye'] = 'OFF'
+		self.status['green_eye'] = 'OFF'
+		self.status['blue_eye'] = 'OFF'
+		self.status['shaking'] = 'NO'
+		self.status['servo_0_position'] = 0
+		self.status['channel_1'] = 0
+		self.status['channel_2'] = 0
+		self.status['channel_3'] = 0
+
+		super(MrContinuousIntegrationHead, self).__init__(*args, **kwargs)
 	
 	def map_gpio(self):
 		pass
@@ -69,12 +82,14 @@ class MrContinuousIntegrationHead(Device):
 	def start_shaking(self):
 		if not self.shaking:
 			self.log("Starting shaking")
+			self.set_status('shaking', 'YES')
 			self.shaking = ServoShaker(self)
 			self.shaking.start()
 
 	def stop_shaking(self):
 		if self.shaking:
 			self.log("Stopping shaking")
+			self.set_status('shaking', 'NO')
 			self.shaking.stop()
 			self.shaking = None
 

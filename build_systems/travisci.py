@@ -19,6 +19,12 @@ class TravisCI(BuildSystem):
 		self.set_status('tci_last_build_id', result['last_build_id'])
 		build_result = requests.get('https://travis-ci.org/builds/%s' % self.status['tci_last_build_id']).json()
 		self.set_status('tci_state', build_result['state'])
+		if build_result['state'] in self.PENDING:
+			self.set_status('state', 'PENDING')
+		elif build_result['result'] == self.SUCCESS:
+			self.set_status('state', 'SUCCESS')
+		else:
+			self.set_status('state', 'FAILURE')
 
 	def poll(self):
 		result = requests.get("https://travis-ci.org/%s" % self.configuration['project']).json()

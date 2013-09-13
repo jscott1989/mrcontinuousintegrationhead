@@ -5,13 +5,14 @@ import pusher
 import os
 import sys
 import yaml
+from collections import OrderedDict
 
 from pi import gpio
 
 class Device(object):
 	test_functions = []
 	logs = []
-	status = {}
+	status = OrderedDict()
 	configuration = {}
 
 	def load_configuration(self):
