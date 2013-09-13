@@ -1,4 +1,3 @@
-
 import subprocess
 
 def speak(sentence, pitch=50):
