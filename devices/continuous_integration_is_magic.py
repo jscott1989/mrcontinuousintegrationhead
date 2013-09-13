@@ -1,4 +1,4 @@
-from . import Outlet
+from . import Device
 
 COLOUR_RED = "red"
 COLOUR_BLUE = "blue"
@@ -10,7 +10,7 @@ BLUE_CHANNEL = 3
 
 COLOUR_CHANNELS = {COLOUR_RED: RED_CHANNEL, COLOUR_GREEN: GREEN_CHANNEL, COLOUR_BLUE: BLUE_CHANNEL}
 
-class ContinuousIntegrationIsMagic(Outlet):
+class ContinuousIntegrationIsMagic(Device):
 	def map_gpio(self):
 		pass
 		# gpio.map(gpio.BOARD, {COLOUR_CHANNELS[COLOUR_RED]: gpio.OUT, COLOUR_CHANNELS[COLOUR_GREEN]: gpio.OUT, COLOUR_CHANNELS[COLOUR_BLUE]: gpio.OUT})

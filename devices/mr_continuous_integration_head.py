@@ -1,8 +1,8 @@
-from . import Outlet
+from . import Device
 
 from pi import gpio
 
-class MrContinuousIntegrationHead(Outlet):
+class MrContinuousIntegrationHead(Device):
 	def map_gpio(self):
 		pass
 		# gpio.map()
