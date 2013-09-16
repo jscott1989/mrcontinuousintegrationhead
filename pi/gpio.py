@@ -1,7 +1,7 @@
 # try:
 from RPi import GPIO
 
-from GPIO import IN, OUT, BOARD, BCM, HIGH, LOW, output, cleanup
+from RPi.GPIO import IN, OUT, BOARD, BCM, HIGH, LOW, output, cleanup
 
 def map(mode, channels):
 	GPIO.setmode(mode)
