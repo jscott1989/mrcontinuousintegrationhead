@@ -53,6 +53,9 @@ class MrContinuousIntegrationHead(Device):
 		self.configuration['servo_base_max'] = 240
 		self.configuration['servo_base_centre'] = 150
 		self.configuration['servo_base_shake_sleep'] = 0.5
+		self.configuration['servo_hat_id'] = 2
+		self.configuration['servo_hat_off_level'] = 60
+		self.configuration['servo_hat_on_level'] = 240
 
 		super(MrContinuousIntegrationHead, self).__init__(*args, **kwargs)
 	
@@ -69,8 +72,11 @@ class MrContinuousIntegrationHead(Device):
 		self.register_test_function('Turn Blue Eye Off', self.webTurnBlueEyeOff)
 		self.register_test_function('Set Base Position Max', self.webSetBasePositionMax)
 		self.register_test_function('Set Base Position Min', self.webSetBasePositionMin)
+		self.register_test_function('Set Base Position Centre', self.webSetBasePositionCentre)
 		self.register_test_function('Start Shaking', self.webStartShaking)
 		self.register_test_function('Stop Shaking', self.webStopShaking)
+		self.register_test_function('Push Hat Off', self.webPushHatOff)
+		self.register_test_function('Put Hat On', self.webPutHatOn)
 
 	def success(self, committer_name, message):
 		# Lower arm
@@ -135,6 +141,12 @@ class MrContinuousIntegrationHead(Device):
 		self.set_status('%s_eye' % colour, 'OFF')
 		self.gpio_output(self.configuration[colour + '_channel'], gpio.LOW)
 
+	def push_hat_off(self):
+		self.set_servo_position(self.configuration['servo_hat_id'], self.configuration['servo_hat_off_level'])
+
+	def put_hat_on(self):
+		self.set_servo_position(self.configuration['servo_hat_id'], self.configuration['servo_hat_on_level'])
+
 
 	def webTurnRedEyeOn(self):
 		self.turnEyeOn(COLOUR_RED)
@@ -155,13 +167,22 @@ class MrContinuousIntegrationHead(Device):
 		self.turnEyeOff(COLOUR_BLUE)
 
 	def webSetBasePositionMax(self):
-		self.set_servo_position(self.configuration['servo_base_id'], 240)
+		self.set_servo_position(self.configuration['servo_base_id'], self.configuration['servo_base_max'])
 
 	def webSetBasePositionMin(self):
-		self.set_servo_position(self.configuration['servo_base_id'], 60)
+		self.set_servo_position(self.configuration['servo_base_id'], self.configuration['servo_base_min'])
+
+	def webSetBasePositionCentre(self):
+		self.set_servo_position(self.configuration['servo_base_id'], self.configuration['servo_base_centre'])
 
 	def webStartShaking(self):
 		self.start_shaking()
 
 	def webStopShaking(self):
 		self.stop_shaking()
+
+	def webPushHatOff(self):
+		self.push_hat_off()
+
+	def webPutHatOn(self):
+		self.put_hat_on()
