@@ -26,9 +26,9 @@ class ContinuousIntegrationIsMagic(Device):
 		self.configuration['flickr_key'] = '83ee24ab46fcbcb14e9f31971f149175'
 		self.configuration['flickr_secret'] = '2fadce29881de31f'
 
-		self.configuration['red_channel'] = 1
-		self.configuration['green_channel'] = 2
-		self.configuration['blue_channel'] = 3
+		self.configuration['red_channel'] = 11
+		self.configuration['green_channel'] = 15
+		self.configuration['blue_channel'] = 13
 
 		bottle.route('/picture.jpg')(self.host_picture)
 
