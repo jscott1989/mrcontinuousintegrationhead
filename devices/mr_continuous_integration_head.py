@@ -59,8 +59,7 @@ class MrContinuousIntegrationHead(Device):
 		super(MrContinuousIntegrationHead, self).__init__(*args, **kwargs)
 	
 	def map_gpio(self):
-		pass
-		# gpio.map()
+		gpio.map(gpio.BOARD, {self.configuration['red_channel']: gpio.OUT, self.configuration['green_channel']: gpio.OUT, self.configuration['blue_channel']: gpio.OUT})
 
 	def register_website_functions(self, *args, **kwargs):
 		self.register_test_function('Turn Red Eye On', self.webTurnRedEyeOn)
