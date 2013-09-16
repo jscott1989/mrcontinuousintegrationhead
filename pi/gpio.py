@@ -17,7 +17,7 @@ except ImportError:
 	LOW = 0
 
 	_mode = None
-	_channels = [{"mode": None, "value": LOW} for x in range(10)]
+	_channels = [{"mode": None, "value": LOW} for x in range(20)]
 
 	def map(mode, channels):
 		_mode = mode
