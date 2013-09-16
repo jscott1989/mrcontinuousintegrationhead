@@ -59,7 +59,7 @@ class ContinuousIntegrationIsMagic(Device):
 
 	def map_gpio(self):
 		pass
-		# gpio.map(gpio.BOARD, {self.configuration['red_channel']: gpio.OUT, self.configuration['green_channel']: gpio.OUT, self.configuration['blue_channel']: gpio.OUT})
+		gpio.map(gpio.BOARD, {self.configuration['red_channel']: gpio.OUT, self.configuration['green_channel']: gpio.OUT, self.configuration['blue_channel']: gpio.OUT})
 
 	def success(self, committer_name, message):
 		# Blue eye
