@@ -96,7 +96,7 @@ class Device(object):
 	def gpio_output(self, channel, value):
 		self.set_status('channel_%s' % channel, value)
 		self.log("Setting channel %s to %s" % (channel, value))
-		gpio.output(channel, value)
+		gpio.output(int(channel), int(value))
 
 	def set_servo_position(self, servo_id, position):
 		self.log("Setting servo position to %s" % position)
