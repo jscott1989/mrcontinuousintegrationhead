@@ -16,14 +16,14 @@ class ServoShaker(threading.Thread):
 	def run(self):
 		self.stopped = False
 
-		position = 240
+		position = self.device.configuration['servo_base_max']
 		while not self.stopped:
-			if position == 240:
-				position = 60
+			if position == self.device.configuration['servo_base_max']:
+				position = self.device.configuration['servo_base_min']
 			else:
-				position = 240
+				position = self.device.configuration['servo_base_max']
 			self.device.set_servo_position(self.device.configuration['servo_base_id'], position)
-			time.sleep(0.5)
+			time.sleep(float(self.device.configuration['servo_base_shake_sleep']))
 
 	def stop(self):
 		self.stopped = True
@@ -48,6 +48,9 @@ class MrContinuousIntegrationHead(Device):
 		self.configuration['green_channel'] = 2
 		self.configuration['blue_channel'] = 3
 		self.configuration['servo_base_id'] = 0
+		self.configuration['servo_base_min'] = 60
+		self.configuration['servo_base_max'] = 240
+		self.configuration['servo_base_shake_sleep'] = 0.5
 
 		super(MrContinuousIntegrationHead, self).__init__(*args, **kwargs)
 	
