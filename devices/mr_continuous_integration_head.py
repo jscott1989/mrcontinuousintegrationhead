@@ -25,6 +25,8 @@ class ServoShaker(threading.Thread):
 			self.device.set_servo_position(self.device.configuration['servo_base_id'], position)
 			time.sleep(float(self.device.configuration['servo_base_shake_sleep']))
 
+		self.device.set_servo_position(self.device.configuration['servo_base_centre'], position)
+
 	def stop(self):
 		self.stopped = True
 
@@ -39,7 +41,6 @@ class MrContinuousIntegrationHead(Device):
 		self.status['green_eye'] = 'OFF'
 		self.status['blue_eye'] = 'OFF'
 		self.status['shaking'] = 'NO'
-		self.status['servo_0_position'] = 0
 		self.status['channel_1'] = 0
 		self.status['channel_2'] = 0
 		self.status['channel_3'] = 0
@@ -50,6 +51,7 @@ class MrContinuousIntegrationHead(Device):
 		self.configuration['servo_base_id'] = 0
 		self.configuration['servo_base_min'] = 60
 		self.configuration['servo_base_max'] = 240
+		self.configuration['servo_base_centre'] = 150
 		self.configuration['servo_base_shake_sleep'] = 0.5
 
 		super(MrContinuousIntegrationHead, self).__init__(*args, **kwargs)
@@ -71,12 +73,32 @@ class MrContinuousIntegrationHead(Device):
 		self.register_test_function('Stop Shaking', self.webStopShaking)
 
 	def success(self, committer_name, message):
+		# Lower arm
+
+		# Stop shaking
+		self.stop_shaking()
+
+		# Blue Eyes
+		self.turnEyesOff()
+		self.turnEyeOn(COLOUR_BLUE)
+
 		print "Success %s (%s)" % (committer_name, message)
 
 	def failure(self, committer_name, message):
+		# Start shaking
+		self.start_shaking()
+
+		# Red Eyes
+		self.turnEyesOff()
+		self.turnEyeOn(COLOUR_RED)
 		print "Failure %s (%s)" % (committer_name, message)
 
 	def pending(self, committer_name, message):
+		# Raise arm
+
+		# Green Eyes
+		self.turnEyesOff()
+		self.turnEyeOn(COLOUR_GREEN)
 		print "Pending %s (%s)" % (committer_name, message)
 
 	def start_shaking(self):
