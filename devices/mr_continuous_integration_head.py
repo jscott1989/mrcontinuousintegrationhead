@@ -30,7 +30,6 @@ class ServoShaker(threading.Thread):
 	def stop(self):
 		self.stopped = True
 
-
 class MrContinuousIntegrationHead(Device):
 	name = "MrContinuousIntegrationHead"
 	shaking = None # The thread handling the shaking
@@ -54,8 +53,8 @@ class MrContinuousIntegrationHead(Device):
 		self.configuration['servo_base_centre'] = 150
 		self.configuration['servo_base_shake_sleep'] = 0.5
 		self.configuration['servo_hat_id'] = 2
-		self.configuration['servo_hat_off_level'] = 60
-		self.configuration['servo_hat_on_level'] = 240
+		self.configuration['servo_hat_off_level'] = 50
+		self.configuration['servo_hat_on_level'] = 150
 
 		super(MrContinuousIntegrationHead, self).__init__(*args, **kwargs)
 	
@@ -76,7 +75,6 @@ class MrContinuousIntegrationHead(Device):
 		self.register_test_function('Start Shaking', self.webStartShaking)
 		self.register_test_function('Stop Shaking', self.webStopShaking)
 		self.register_test_function('Push Hat Off', self.webPushHatOff)
-		self.register_test_function('Put Hat On', self.webPutHatOn)
 
 	def success(self, committer_name, message):
 		# Lower arm
@@ -143,6 +141,8 @@ class MrContinuousIntegrationHead(Device):
 
 	def push_hat_off(self):
 		self.set_servo_position(self.configuration['servo_hat_id'], self.configuration['servo_hat_off_level'])
+		time.sleep(3)
+		self.set_servo_position(self.configuration['servo_hat_id'], self.configuration['servo_hat_on_level'])
 
 	def put_hat_on(self):
 		self.set_servo_position(self.configuration['servo_hat_id'], self.configuration['servo_hat_on_level'])
@@ -183,6 +183,3 @@ class MrContinuousIntegrationHead(Device):
 
 	def webPushHatOff(self):
 		self.push_hat_off()
-
-	def webPutHatOn(self):
-		self.put_hat_on()
