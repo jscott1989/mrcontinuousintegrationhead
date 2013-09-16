@@ -11,15 +11,15 @@ class TravisCI(BuildSystem):
 	FAIL = 1
 
 	def setup(self):
-		self.configuration['travis_enabled'] = 0
+		self.configuration['travis_enabled'] = 1
 		self.configuration['timeout'] = 10
 		self.configuration['project'] = 'jscott1989/mrcontinuousintegrationhead'
 		self.load_configuration()
 
 		if self.configuration['travis_enabled'] > 0:
-			result = requests.get("https://travis-ci.org/%s" % self.configuration['project']).json()
+			result = requests.get("https://api.travis-ci.org/%s" % self.configuration['project']).json()
 			self.set_status('tci_last_build_id', result['last_build_id'])
-			build_result = requests.get('https://travis-ci.org/builds/%s' % self.status['tci_last_build_id']).json()
+			build_result = requests.get('https://api.travis-ci.org/builds/%s' % self.status['tci_last_build_id']).json()
 			self.set_status('tci_state', build_result['state'])
 			if build_result['state'] in self.PENDING:
 				self.set_status('state', 'PENDING')
@@ -30,9 +30,9 @@ class TravisCI(BuildSystem):
 
 	def poll(self):
 		if self.configuration['travis_enabled'] > 0:
-			result = requests.get("https://travis-ci.org/%s" % self.configuration['project']).json()
+			result = requests.get("https://api.travis-ci.org/%s" % self.configuration['project']).json()
 			build_id = result['last_build_id']
-			build_result = requests.get('https://travis-ci.org/builds/%s' % build_id).json()
+			build_result = requests.get('https://api.travis-ci.org/builds/%s' % build_id).json()
 			state = build_result['state']
 
 			if self.status['tci_last_build_id'] != build_id or self.status['tci_state'] != state:
