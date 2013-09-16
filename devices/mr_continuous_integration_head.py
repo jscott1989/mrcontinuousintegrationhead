@@ -53,7 +53,7 @@ class MrContinuousIntegrationHead(Device):
 		self.configuration['servo_base_centre'] = 150
 		self.configuration['servo_base_shake_sleep'] = 0.5
 		self.configuration['servo_hat_id'] = 2
-		self.configuration['servo_hat_off_level'] = 50
+		self.configuration['servo_hat_off_level'] = 80
 		self.configuration['servo_hat_on_level'] = 150
 
 		super(MrContinuousIntegrationHead, self).__init__(*args, **kwargs)

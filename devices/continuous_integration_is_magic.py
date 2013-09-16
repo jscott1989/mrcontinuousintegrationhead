@@ -48,7 +48,6 @@ class ContinuousIntegrationIsMagic(Device):
 
 	def take_picture(self):
 		super(ContinuousIntegrationIsMagic, self).take_picture()
-		time.sleep(2) # Wait 2 seconds to give it time to save the photo
 		self.set_status('latest_picture', '<img id="pony_picture" style="width:500px" src="/picture.jpg?pid=%d">' % random.randint(0, 9999999))
 		flickr = flickrapi.FlickrAPI(self.configuration['flickr_key'], self.configuration['flickr_secret'])
 		(token, frob) = flickr.get_token_part_one(perms='write')

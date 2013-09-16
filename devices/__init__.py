@@ -94,9 +94,9 @@ class Device(object):
 			outfile.write(yaml.dump(self.configuration, default_flow_style=True))
 
 	def gpio_output(self, channel, value):
-		gpio.output(channel, value)
 		self.set_status('channel_%s' % channel, value)
 		self.log("Setting channel %s to %s" % (channel, value))
+		gpio.output(channel, value)
 
 	def set_servo_position(self, servo_id, position):
 		self.log("Setting servo position to %d" % position)
