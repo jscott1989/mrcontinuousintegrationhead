@@ -44,8 +44,8 @@ class MrContinuousIntegrationHead(Device):
 		self.status['channel_2'] = 0
 		self.status['channel_3'] = 0
 
-		self.configuration['red_channel'] = 24
-		self.configuration['green_channel'] = 25
+		self.configuration['red_channel'] = 22
+		self.configuration['green_channel'] = 16
 		self.configuration['blue_channel'] = 23
 		self.configuration['servo_base_id'] = 0
 		self.configuration['servo_base_min'] = 60
