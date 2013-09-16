@@ -49,15 +49,14 @@ class ContinuousIntegrationIsMagic(Device):
 	def take_picture(self):
 		super(ContinuousIntegrationIsMagic, self).take_picture()
 		self.set_status('latest_picture', '<img id="pony_picture" style="width:500px" src="/picture.jpg?pid=%d">' % random.randint(0, 9999999))
-		flickr = flickrapi.FlickrAPI(self.configuration['flickr_key'], self.configuration['flickr_secret'])
-		(token, frob) = flickr.get_token_part_one(perms='write')
-		if not token: raw_input("Press ENTER after you authorized this program")
-		flickr.get_token_part_two((token, frob))
-		flickr.upload('picture/picture.jpg')
+		# flickr = flickrapi.FlickrAPI(self.configuration['flickr_key'], self.configuration['flickr_secret'])
+		# (token, frob) = flickr.get_token_part_one(perms='write')
+		# if not token: raw_input("Press ENTER after you authorized this program")
+		# flickr.get_token_part_two((token, frob))
+		# flickr.upload('picture/picture.jpg')
 
 
 	def map_gpio(self):
-		pass
 		gpio.map(gpio.BOARD, {self.configuration['red_channel']: gpio.OUT, self.configuration['green_channel']: gpio.OUT, self.configuration['blue_channel']: gpio.OUT})
 
 	def success(self, committer_name, message):

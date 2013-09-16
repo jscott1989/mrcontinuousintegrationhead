@@ -44,9 +44,9 @@ class MrContinuousIntegrationHead(Device):
 		self.status['channel_2'] = 0
 		self.status['channel_3'] = 0
 
-		self.configuration['red_channel'] = 1
-		self.configuration['green_channel'] = 2
-		self.configuration['blue_channel'] = 3
+		self.configuration['red_channel'] = 24
+		self.configuration['green_channel'] = 25
+		self.configuration['blue_channel'] = 23
 		self.configuration['servo_base_id'] = 0
 		self.configuration['servo_base_min'] = 60
 		self.configuration['servo_base_max'] = 240
@@ -94,7 +94,7 @@ class MrContinuousIntegrationHead(Device):
 
 		# Red Eyes
 		self.turnEyesOff()
-		self.turnEyeOn(COLOUR_RED)
+		# self.turnEyeOn(COLOUR_RED)
 		print "Failure %s (%s)" % (committer_name, message)
 
 	def pending(self, committer_name, message):
@@ -102,7 +102,7 @@ class MrContinuousIntegrationHead(Device):
 
 		# Green Eyes
 		self.turnEyesOff()
-		self.turnEyeOn(COLOUR_GREEN)
+		# self.turnEyeOn(COLOUR_GREEN)
 		print "Pending %s (%s)" % (committer_name, message)
 
 	def start_shaking(self):
