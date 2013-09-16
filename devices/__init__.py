@@ -100,7 +100,7 @@ class Device(object):
 
 	def set_servo_position(self, servo_id, position):
 		self.log("Setting servo position to %s" % position)
-		self.set_status('servo_%d_position' % servo_id, position)
+		self.set_status('servo_%s_position' % servo_id, position)
 		servo.set_position(0, position)
 
 	def speak(self, message, pitch):
