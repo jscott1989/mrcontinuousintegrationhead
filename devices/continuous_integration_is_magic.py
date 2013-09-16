@@ -2,6 +2,9 @@ from . import Device
 
 from pi import gpio
 import bottle
+import flickrapi
+import random
+import time
 
 COLOUR_RED = "red"
 COLOUR_BLUE = "blue"
@@ -20,6 +23,9 @@ class ContinuousIntegrationIsMagic(Device):
 		self.status['channel_3'] = 0
 		self.status['latest_picture'] = '<img id="pony_picture" style="width:500px" src="/picture.jpg">'
 
+		self.configuration['flickr_key'] = '83ee24ab46fcbcb14e9f31971f149175'
+		self.configuration['flickr_secret'] = '2fadce29881de31f'
+
 		self.configuration['red_channel'] = 1
 		self.configuration['green_channel'] = 2
 		self.configuration['blue_channel'] = 3
@@ -35,21 +41,42 @@ class ContinuousIntegrationIsMagic(Device):
 		self.register_test_function('Turn Green Eye Off', self.webTurnGreenEyeOff)
 		self.register_test_function('Turn Blue Eye On', self.webTurnBlueEyeOn)
 		self.register_test_function('Turn Blue Eye Off', self.webTurnBlueEyeOff)
+		self.register_test_function('Take Picture', self.webTakePicture)
 
 	def host_picture(self):
 		return bottle.static_file('picture.jpg', root='picture')
+
+	def take_picture(self):
+		super(ContinuousIntegrationIsMagic, self).take_picture()
+		time.sleep(2) # Wait 2 seconds to give it time to save the photo
+		self.set_status('latest_picture', '<img id="pony_picture" style="width:500px" src="/picture.jpg?pid=%d">' % random.randint(0, 9999999))
+		flickr = flickrapi.FlickrAPI(self.configuration['flickr_key'], self.configuration['flickr_secret'])
+		(token, frob) = flickr.get_token_part_one(perms='write')
+		if not token: raw_input("Press ENTER after you authorized this program")
+		flickr.get_token_part_two((token, frob))
+		flickr.upload('picture/picture.jpg')
+
 
 	def map_gpio(self):
 		pass
 		# gpio.map(gpio.BOARD, {self.configuration['red_channel']: gpio.OUT, self.configuration['green_channel']: gpio.OUT, self.configuration['blue_channel']: gpio.OUT})
 
 	def success(self, committer_name, message):
+		# Blue eye
+		self.turnEyeOn(COLOUR_BLUE);
 		print "Success %s (%s)" % (committer_name, message)
 
 	def failure(self, committer_name, message):
+		# Red eye
+		self.turnEyeOn(COLOUR_RED);
 		print "Failure %s (%s)" % (committer_name, message)
 
+		time.sleep(3)
+		self.take_picture()
+
 	def pending(self, committer_name, message):
+		# Green eye
+		self.turnEyeOn(COLOUR_GREEN);
 		print "Pending %s (%s)" % (committer_name, message)
 
 	def turnEyesOn(self):
@@ -90,3 +117,6 @@ class ContinuousIntegrationIsMagic(Device):
 
 	def webTurnBlueEyeOff(self):
 		self.turnEyeOff(COLOUR_BLUE)
+
+	def webTakePicture(self):
+		self.take_picture()

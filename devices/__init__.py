@@ -114,8 +114,6 @@ class Device(object):
 	def take_picture(self):
 		self.log("Taking picture")
 		camera.take_picture()
-		self.set_status('latest_picture', '<img id="pony_picture" style="width:500px" src="/picture.jpg?pid=%d">' % random.randint(0, 9999999))
-
 
 	def webSuccess(self):
 		self.success("Test Committer", "Test Message")

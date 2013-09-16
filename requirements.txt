@@ -3,3 +3,4 @@ requests==1.2.3
 bottle==0.11.6
 pusher==0.8
 pyyaml==3.10.0
+flickrapi==1.4.2
